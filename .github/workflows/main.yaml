@@ -1,0 +1,32 @@
+name: Containerize and publish noso wallet/node
+
+on:
+  pull_request:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    if: contains(github.ref, '/tags/')
+    name: Build and Upload
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build container image
+      run: |
+        tag=${{ github.event.ref }}
+        tag=${tag#"refs/tags/"}
+        make NOSO_VERSION=${tag} build
+        
+    - name: GHCR Login
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.CR_PAT }}
+
+    - name: Push to GHCR
+      run: make push
