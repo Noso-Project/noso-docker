@@ -1,10 +1,14 @@
 name: Containerize and publish noso wallet/node
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      noso_tag:
+        description: 'NosoWallet git tag'
+        required: true
 
 jobs:
   build:
-    if: contains(github.ref, '/tags/')
     name: Build and Upload
     runs-on: ubuntu-latest
     steps:
@@ -13,9 +17,8 @@ jobs:
 
     - name: Build container image
       run: |
-        tag=${{ github.event.ref }}
-        tag=${tag#"refs/tags/"}
-        make NOSO_VERSION=${tag} build
+        echo "Recieved tag: ${{ github.event.inputs.noso_tag }}"
+        make NOSO_VERSION=${{ github.event.inputs.noso_tag }} build
         
     - name: GHCR Login
       uses: docker/login-action@v1
