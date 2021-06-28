@@ -11,6 +11,7 @@ ShowedOrders 100
 MaxPeers 50
 PoolStepsDeep 3
 AutoConnect True
+AutoServer True
 ToTray False
 MinConexToWork 1
 PosWarning 7
