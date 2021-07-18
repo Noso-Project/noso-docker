@@ -28,4 +28,4 @@ jobs:
         password: ${{ secrets.CR_PAT }}
 
     - name: Push to GHCR
-      run: make push
+      run: make NOSO_VERSION=${{ github.event.inputs.noso_tag }} push
